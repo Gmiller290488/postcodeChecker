@@ -64,7 +64,4 @@ def start():
     getWinningPostCode()
     sendEmail()
     
-
-    
-
 start()

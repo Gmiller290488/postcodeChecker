@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from .models import User 
 
 browser = webdriver.Firefox()
 emailValue = "gmiller290488@gmail.com"
@@ -48,11 +49,14 @@ def getWinningPostCode():
 
 def sendEmail():
     global winnerPostcode
+    # emailTo = User.objects.filter(postcode=winnerPostcode)
+
     emailFrom = "postcoderwinner@gmail.com"
     emailSubject = "Your postcode is the winner!"
     emailBody = "Congratulations! % s is the winning postcode today! Log in at https://pickmypostcode.com/account/ to claim"% winnerPostcode
     yag = yagmail.SMTP(emailFrom, keyring.get_password('gmail', emailFrom))
     yag.send(emailValue, emailSubject, emailBody)
+
 
 def start():
     loadBrowser()

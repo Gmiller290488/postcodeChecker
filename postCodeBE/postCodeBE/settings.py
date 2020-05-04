@@ -70,7 +70,7 @@ TEMPLATES = [
 ]
 
 CRONJOBS = [
-    ('10 12 * * *', 'myapp.cron.check_postcode')
+    ('10 * * * *', 'myapp.cron.check_postcode')
 ]
 
 WSGI_APPLICATION = 'postCodeBE.wsgi.application'
