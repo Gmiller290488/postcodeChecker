@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'postcodeApp.apps.PostcodeappConfig',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+CRONJOBS = [
+    ('10 12 * * *', 'myapp.cron.check_postcode')
 ]
 
 WSGI_APPLICATION = 'postCodeBE.wsgi.application'
