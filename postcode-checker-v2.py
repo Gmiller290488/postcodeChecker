@@ -1,4 +1,4 @@
-import requests, os, bs4, chromedriver_binary, time, smtplib, yagmail, keyring
+import requests, os, bs4, time, smtplib, yagmail, keyring
 from bs4 import BeautifulSoup          
 import requests, json
 
@@ -38,6 +38,7 @@ params = (
 )
 
 response = requests.get('https://pickmypostcode.com/api/index.php/draws/main/', headers=headers, params=params, cookies=cookies)
+json = json.loads(response.text)
 
 def get_all_postcodes(myjson, key):
     if type(myjson) == str:
@@ -53,7 +54,7 @@ def get_all_postcodes(myjson, key):
             if type(item) in (list, dict):
                 get_all_postcodes(item, key)
 
-json = json.loads(response.text)
+
 
 get_all_postcodes(json, "result")
 
