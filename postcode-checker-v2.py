@@ -2,6 +2,9 @@ import requests, os, bs4, time, smtplib, yagmail, keyring
 from bs4 import BeautifulSoup          
 import requests, json
 
+emailValue = "gmiller290488@gmail.com"
+winnerPostcode = ""
+
 cookies = {
     'PHPSESSID': '3666568cee093c3f6ba9d857c93bd318',
     '_cmpQcif3pcsupported': '1',
@@ -54,11 +57,15 @@ def get_all_postcodes(myjson, key):
             if type(item) in (list, dict):
                 get_all_postcodes(item, key)
 
+def sendEmail():
+    global winnerPostcode
+    # emailTo = User.objects.filter(postcode=winnerPostcode)
 
+    emailFrom = "postcoderwinner@gmail.com"
+    emailSubject = "Your postcode is the winner!"
+    emailBody = "Congratulations! % s is the winning postcode today! Log in at https://pickmypostcode.com/account/ to claim"% winnerPostcode
+    yag = yagmail.SMTP(emailFrom, keyring.get_password('gmail', emailFrom))
+    yag.send(emailValue, emailSubject, emailBody)
 
 get_all_postcodes(json, "result")
-
-
-
-# with open("output1.html", "w") as file:
-#     file.write(str(soup))
+sendEmail()
