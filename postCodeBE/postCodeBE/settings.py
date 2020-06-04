@@ -70,7 +70,8 @@ TEMPLATES = [
 ]
 
 CRONJOBS = [
-    ('10  * * *', 'myapp.cron.check_postcode')
+    ('*/1 * * * *', 'postcodeApp.cron.start', '>> /Users/spare/Documents/postcodeChecker/postCodeBE/postCodeBE/file.log'),
+
 ]
 
 WSGI_APPLICATION = 'postCodeBE.wsgi.application'

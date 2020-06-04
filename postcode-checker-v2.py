@@ -42,6 +42,7 @@ params = (
 
 response = requests.get('https://pickmypostcode.com/api/index.php/draws/main/', headers=headers, params=params, cookies=cookies)
 json = json.loads(response.text)
+print(json)
 
 def get_all_postcodes(myjson, key):
     if type(myjson) == str:

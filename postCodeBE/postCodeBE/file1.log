@@ -1,0 +1,8 @@
+SHELL=/bin/sh
+USER=spare
+PATH=/usr/bin:/bin
+PWD=/Users/spare
+SHLVL=1
+HOME=/Users/spare
+LOGNAME=spare
+_=/usr/bin/env
