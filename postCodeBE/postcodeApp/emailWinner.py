@@ -8,20 +8,25 @@ import keyring
 import requests
 import json
 from .models import User
+from validate_email import validate_email
 
 emailValue = "gmiller290488@gmail.com"
-# emailValue = "Hayley_Topham@hotmail.com"
-winnerPostcode = "BT34 3FP"
+winnerPostcode = []
 
 def sendEmail():
-    global winnerPostcode
-    emailTo = User.objects.filter(postcode=winnerPostcode)
-    emailToString = str(emailTo[1])
+    global winnerPostcode  
+    emailTo = User.objects.filter(postcode__in=winnerPostcode)
+    print(winnerPostcode)
+    print(emailTo)
+    emailToList = []
+    for user in emailTo:
+        if validate_email(email_address=str(user), check_regex=True, check_mx=True, from_address='postcoderwinner@gmail.com', smtp_timeout=10, dns_timeout=10, use_blacklist=True):
+            emailToList.append(str(user))
     emailFrom = "postcoderwinner@gmail.com"
     emailSubject = "Your postcode is the winner!"
-    emailBody = "<h1>Congratulations!</h1> The winning postcodes today are: \n % s \n Log in at https://pickmypostcode.com/account/ to claim" % winnerPostcode
+    emailBody = "<h1>Congratulations!</h1> The winning postcodes today are: \n % s \n Log in at https://pickmypostcode.com/account/ to claim" % ",\n".join(winnerPostcode)
     yag = yagmail.SMTP(emailFrom, keyring.get_password('gmail', emailFrom))
-    yag.send(to = emailToString, bcc = emailValue, subject = emailSubject, contents = emailBody)
+    yag.send(to = emailToList, bcc = emailValue, subject = emailSubject, contents = emailBody)
 
 def make_request():
     cookies = {
@@ -61,7 +66,7 @@ def make_request():
     response = requests.get('https://pickmypostcode.com/api/index.php/draws/main/',
                             headers=headers, params=params, cookies=cookies)
     json1 = json.loads(response.text)
-    # get_all_postcodes(json1, "result")
+    get_all_postcodes(json1, "result")
 
 def get_all_postcodes(myjson, key):
     global winnerPostcode
@@ -72,10 +77,8 @@ def get_all_postcodes(myjson, key):
             if type(myjson[jsonkey]) in (list, dict):
                 get_all_postcodes(myjson[jsonkey], key)
             elif jsonkey == key:
-                if winnerPostcode == "":
-                    winnerPostcode = myjson[jsonkey]
-                else:
-                    winnerPostcode += ", \n" + myjson[jsonkey]
+                winnerPostcode.append(myjson[jsonkey].strip())
+
     elif type(myjson) is list:
         for item in myjson:
             if type(item) in (list, dict):
