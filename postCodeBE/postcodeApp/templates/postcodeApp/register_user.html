@@ -1,12 +1,38 @@
 <html>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'homepage.css' %}"/>
     <head>
         <title>Pick my postcode lottery checker!</title>
     </head>
     <body>
-         <h2>Register</h2>
-        <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-        </form>
-    </body>
+        <div id = "landing">
+          <div id = "landing-text">
+            <h1 id = "name">Pick-My-Postcode lottery checker</h1>
+            <div class = "container">
+              <div id = "left-landing">
+                <h2>
+                  What is this all about?
+                </h2>
+                <h3>
+                  Pick My Postcode Lottery gives away £200 a day in the main draw, and £50 each in the video and survey draw (and if the money isn't claimed, it is rolled over so you could end up winning much more!). 
+                  <p>
+                    To be in with a chance to win you need to register your email address and postcode on the 
+                  <a href="https://pickmypostcode.com/?onboarding=complete">PMP site</a>
+                  and then check their webpage every day to see if your postcode is the winner.
+                  
+                  <p>
+                  I created this automatic postcode lottery checker because I had signed up, but continually forgot to check if I had won!  So I built this app to check the results each day and email the winner.  All you need to do is to register the same postcode and email address here as you did on the PMP site and I will email you if your postcode is one of the winners.  No need to remember to check everyday and watch a video or fill in a survey!
+                  <p>        
+              </div>
+               
+              <div id = "right-landing">
+                <h2>Register</h2>
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="save btn btn-default">Save</button>
+                </form>
+              </div>
+            </div>
+      </body>
 </html>

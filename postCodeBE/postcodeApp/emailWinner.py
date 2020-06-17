@@ -11,19 +11,20 @@ from .models import User
 from validate_email import validate_email
 
 emailValue = "gmiller290488@gmail.com"
-winnerPostcode = []
+winningPostcodes = []
 
 def sendEmail():
-    global winnerPostcode  
+    global winningPostcodes  
     emailToList = buildEmailList()
     emailFrom = "postcoderwinner@gmail.com"
     emailSubject = "Your postcode is a winner!"
-    emailBody = "<h1>Congratulations!</h1> The winning postcodes today are: \n % s \n Log in at https://pickmypostcode.com/account/ to claim" % ",\n".join(winnerPostcode)
+    emailBody = "<h1>Congratulations!</h1> The winning postcodes today are: \n % s \n Log in at https://pickmypostcode.com/account/ to claim" % ",\n".join(winningPostcodes)
     yag = yagmail.SMTP(emailFrom, keyring.get_password('gmail', emailFrom))
     yag.send(to = emailToList, bcc = emailValue, subject = emailSubject, contents = emailBody)
 
 def buildEmailList():
-    emailTo = User.objects.filter(postcode__in=winnerPostcode)
+    winningPostcodesNoSpaces = [x.strip(' ') for x in winningPostcodes]
+    emailTo = User.objects.filter(postcode__in=winningPostcodesNoSpaces)
     emailToList = []
     for user in emailTo:
         if validate_email(email_address=str(user), check_regex=True, check_mx=True, from_address='postcoderwinner@gmail.com', smtp_timeout=10, dns_timeout=10, use_blacklist=True):
@@ -71,7 +72,7 @@ def make_request():
     get_all_postcodes(postcodeJson, "result")
 
 def get_all_postcodes(json, key):
-    global winnerPostcode
+    global winningPostcodes
     if type(json) == str:
         json = json.loads(json)
     if type(json) is dict:
@@ -79,7 +80,8 @@ def get_all_postcodes(json, key):
             if type(json[jsonkey]) in (list, dict):
                 get_all_postcodes(json[jsonkey], key)
             elif jsonkey == key:
-                addPostcodeToList(json[jsonkey])
+                print(json[jsonkey].replace(" ", ""))
+                addPostcodeToList(json[jsonkey].replace(" ", ""))
 
     elif type(json) is list:
         for item in json:
@@ -87,13 +89,13 @@ def get_all_postcodes(json, key):
                 get_all_postcodes(item, key)
 
 def addPostcodeToList(postcode):
-    winnerPostcodeLength = len(winnerPostcode)
+    winnerPostcodeLength = len(winningPostcodes)
     if winnerPostcodeLength == 0:
-        winnerPostcode.append("Main draw: <strong>" + postcode + "</strong>")
+        winningPostcodes.append("Main draw: <strong>" + postcode + "</strong>")
     if winnerPostcodeLength == 1:
-        winnerPostcode.append("Survey draw: <strong>" + postcode + "</strong>")
+        winningPostcodes.append("Survey draw: <strong>" + postcode + "</strong>")
     if winnerPostcodeLength == 2:
-        winnerPostcode.append("Video draw: <strong>" + postcode + "</strong>")
+        winningPostcodes.append("Video draw: <strong>" + postcode + "</strong>")
 
 def start():
     make_request()

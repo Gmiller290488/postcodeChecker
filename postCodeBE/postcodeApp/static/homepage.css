@@ -1,0 +1,20 @@
+#landing {
+    background-color: red;
+}
+  
+.container div {
+    display: inline-block;
+    white-space: nowrap;
+}
+  
+#left-landing {
+    background-color: red;
+    white-space: normal;
+    width: 59%;
+}
+  
+#right-landing {
+    background-color: blue;
+    white-space: normal;
+    width: 40%;
+}
