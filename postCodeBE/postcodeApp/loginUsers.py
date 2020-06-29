@@ -48,6 +48,4 @@ def make_login_request():
     for user in users:
         data['email'] = user.email
         data['postcode'] = user.postcode
-        print(data)
         response = requests.post('https://pickmypostcode.com/api/index.php/login/from/main', headers=headers, cookies=cookies, data=data)
-        print(response)
